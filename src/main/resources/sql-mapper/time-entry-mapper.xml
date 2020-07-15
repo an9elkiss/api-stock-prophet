@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.an9elkiss.api.timedo.dao.TimeEntryDao">
+
+
+	<resultMap id = "timeEntryCmd" type = "TimeEntryCmd">
+	   <result property = "id" column = "id"/>
+	   <result property = "date" column = "date"/>
+	   <result property = "duration" column = "duration"/>
+	   <result property = "typeId" column = "type_id"/>
+	   <result property = "comment" column = "comment"/>
+	</resultMap>
+
+
+	<insert id="save" parameterType="TimeEntry" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO t_time_entry
+		(date, type_id, comment, duration, status, create_by, update_by)
+		VALUES
+		(#{date}, #{typeId}, #{comment}, #{duration}, #{status}, #{createBy}, #{createBy});
+	</insert>
+	  
+	<update id="update" parameterType="TimeEntry">
+		UPDATE t_time_entry 
+		SET date=#{date}
+		, type_id=#{typeId}
+		, comment=#{comment}
+		, duration=#{duration}
+		, update_by=#{updateBy}
+		where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		DELETE FROM t_time_entry
+		WHERE id=#{id}
+	</delete>
+	
+	<select id="findById"  resultMap = "timeEntryCmd" >
+		SELECT *
+		FROM t_time_entry 
+		WHERE id = #{id}
+	</select>
+	
+	<select id="sumDurationOfDay" resultType="java.lang.Integer" >
+		SELECT SUM(duration)
+		FROM t_time_entry 
+		WHERE date = #{date}
+		AND create_by = #{createBy}
+	</select>
+	
+	<select id="findTimeEntries" resultMap = "timeEntryCmd">
+		SELECT *
+		FROM t_time_entry
+		WHERE 1 = 1
+		<if test="dateFrom!=null">
+			and date <![CDATA[>=]]> #{dateFrom}
+		</if>
+		<if test="dateTo!=null">
+			and date <![CDATA[<=]]> #{dateTo}
+		</if>
+		<if test="date!=null">
+			and date = #{date}
+		</if>
+		<if test="typeId!=null">
+			and type_id = #{typeId}
+		</if>
+		<if test="createBy!=null and createBy!=''">
+			and create_by = #{createBy}
+		</if>
+	</select>
+	
+</mapper>

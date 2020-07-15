@@ -1,0 +1,395 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a sample Petstore server.  You can find \nout more about Swagger at \n[http://swagger.io](http://swagger.io) or on \n[irc.freenode.net, #swagger](http://swagger.io/irc/).\n",
+    "version" : "1.0.0",
+    "title" : "Time Dominator",
+    "termsOfService" : "http://swagger.io/terms/",
+    "contact" : {
+      "email" : "apiteam@swagger.io"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "localhost:9001",
+  "basePath" : "/api-time-dominator/1.0.0",
+  "tags" : [ {
+    "name" : "time-entry",
+    "description" : "Everything you have done on a day",
+    "externalDocs" : {
+      "description" : "Find out more",
+      "url" : "http://swagger.io"
+    }
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/time-entry" : {
+      "post" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Add a new time entry record to record what you have done",
+        "operationId" : "addTimeEntry",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "formData",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "formData",
+          "description" : "Date of the time entry",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "typeId",
+          "in" : "formData",
+          "description" : "Type of time entry",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "comment",
+          "in" : "formData",
+          "description" : "Comment of time entry",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "duration",
+          "in" : "formData",
+          "description" : "Duration of time entry",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Invalid input"
+          }
+        }
+      }
+    },
+    "/time-entry/{id}" : {
+      "get" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Finds time entry by id",
+        "description" : "Finds time entry by id",
+        "operationId" : "findPetById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of time entry that needs to be fetched",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/TimeEntry"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Update an existing time entry",
+        "operationId" : "updateTimeEntry",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of time entry that needs to be updated",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "token",
+          "in" : "formData",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "formData",
+          "description" : "Updated date of the time entry",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "typeId",
+          "in" : "formData",
+          "description" : "Updated type of time entry",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "comment",
+          "in" : "formData",
+          "description" : "Updated comment of time entry",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "duration",
+          "in" : "formData",
+          "description" : "Updated duration of time entry",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "405" : {
+            "description" : "Validation exception"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Deletes a time entry",
+        "operationId" : "deleteTimeEntry",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Time entry id to delete",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        }
+      }
+    },
+    "/time-entries" : {
+      "get" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Find time entries",
+        "description" : "Find time entries",
+        "operationId" : "findTimeEntries",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dateFrom",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : false,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "dateTo",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : false,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "month",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/time-entries/daily" : {
+      "get" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Find daily time entries",
+        "description" : "Find all types of daily time entries, including empty entries",
+        "operationId" : "findDailyTimeEntries",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/week-days" : {
+      "get" : {
+        "tags" : [ "time-entry" ],
+        "summary" : "Get daily status of the current week",
+        "operationId" : "getWeekDays",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Query param",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WeekDays"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "petstore_auth" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+      "flow" : "implicit",
+      "scopes" : {
+        "write:pets" : "modify pets in your account",
+        "read:pets" : "read your pets"
+      }
+    },
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "api_key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "TimeEntry" : {
+      "type" : "object",
+      "required" : [ "date", "duration", "type" ],
+      "properties" : {
+        "date" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "it-learning"
+        },
+        "comment" : {
+          "type" : "string",
+          "example" : "learn AI"
+        },
+        "duration" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "example" : {
+        "date" : "2000-01-23T04:56:07.000+00:00",
+        "duration" : 0,
+        "comment" : "learn AI",
+        "type" : "it-learning"
+      }
+    },
+    "DailyStatus" : {
+      "type" : "object",
+      "properties" : {
+        "date" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "type" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "example" : {
+        "date" : 0,
+        "type" : 6
+      }
+    },
+    "WeekDays" : {
+      "type" : "object",
+      "properties" : {
+        "days" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DailyStatus"
+          }
+        }
+      },
+      "example" : {
+        "days" : [ {
+          "date" : 0,
+          "type" : 6
+        }, {
+          "date" : 0,
+          "type" : 6
+        } ]
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  }
+}
