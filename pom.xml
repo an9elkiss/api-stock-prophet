@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>an9elkiss.cn</groupId>
-    <artifactId>api-time-dominator</artifactId>
+    <artifactId>api-stock-prophet</artifactId>
     <packaging>jar</packaging>
-    <name>api-time-dominator</name>
+    <name>api-stock-prophet</name>
     <version>1.0.0</version>
     <properties>
         <java.version>1.7</java.version>
@@ -106,13 +106,6 @@
 		    <groupId>commons-codec</groupId>
     		<artifactId>commons-codec</artifactId>
 		    <version>1.9</version>
-		</dependency>
-		
-		<!-- a9 commons -->
-		<dependency>
-		    <groupId>an9elkiss.cn</groupId>
-		    <artifactId>a9-commons</artifactId>
-		    <version>1.0.0</version>
 		</dependency>
 		
 		<!-- tools -->

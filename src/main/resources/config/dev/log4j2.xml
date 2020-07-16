@@ -18,7 +18,7 @@
         	<appender-ref ref="Console"/>
         </logger>
         
-        <logger name="com.an9elkiss.api.timedo.api" level="debug" additivity="true">
+        <logger name="com.an9elkiss.api.spp.api" level="debug" additivity="true">
         	<appender-ref ref="Console"/>
         </logger>
           
