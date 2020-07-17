@@ -1,12 +1,8 @@
 package com.an9elkiss.api.spp.command;
 
-import lombok.Data;
+import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 
-@Data
-public class QutationDailyFetchCmd   {
-
-	private String tsCode;
-	private String tradeDate;
+public class QutationDailyFetchCmd extends QuotationDailyCmd {
 
 }
 

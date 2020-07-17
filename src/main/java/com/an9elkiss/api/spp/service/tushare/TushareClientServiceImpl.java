@@ -11,11 +11,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.an9elkiss.api.spp.command.QutationDailyFetchCmd;
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
+import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
+import com.an9elkiss.api.spp.constant.TushareApiName;
+import com.an9elkiss.api.spp.exception.SppBizException;
 import com.an9elkiss.commons.util.JsonUtils;
 
 import lombok.extern.log4j.Log4j2;
@@ -24,23 +27,24 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class TushareClientServiceImpl implements TushareClientService {
 
-	private String url = "http://api.tushare.pro";
-	
-//	private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
-
 	private RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(2000).setSocketTimeout(10000)
 			.build();
 
-	private static final CloseableHttpClient httpClient = HttpClients.createDefault();
+	private CloseableHttpClient httpClient = HttpClients.createDefault();
+
+	@Value("${spp.tushare.token}")
+	private String token;
+
+	@Value("${spp.tushare.api.url}")
+	private String url;
 
 	@Override
-	public String tushareApi(QutationDailyFetchCmd params) {
+	public TushareRespCmd tushareApi(TushareReqCmd<?> reqCmd) {
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
 		httpPost.setConfig(requestConfig);
 
-		String jsonReq = JsonUtils.toString(buildQuotationDailyCmd(params));
-//		se.setContentType(CONTENT_TYPE_TEXT_JSON);
+		String jsonReq = JsonUtils.toString(reqCmd);
 
 		try {
 			httpPost.setEntity(new StringEntity(jsonReq));
@@ -48,25 +52,23 @@ public class TushareClientServiceImpl implements TushareClientService {
 			CloseableHttpResponse response = httpClient.execute(httpPost);
 
 			HttpEntity httpEntity = response.getEntity();
-			return EntityUtils.toString(httpEntity, "UTF-8");
-		} catch (ParseException | IOException e) {
-			log.warn("请求 Tushare异常！", e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String json = EntityUtils.toString(httpEntity, "UTF-8");
 
-			return null;
+			return JsonUtils.parse(json, TushareRespCmd.class);
+		} catch (ParseException | IOException e) {
+			throw new SppBizException("请求 Tushare异常！", e);
 		}
 	}
 
-	private TushareReqCmd<QuotationDailyCmd> buildQuotationDailyCmd(QutationDailyFetchCmd params) {
-		QuotationDailyCmd cmd = new QuotationDailyCmd();
-		cmd.setTs_code(params.getTsCode());
-		cmd.setTrade_date(params.getTradeDate());
+	@Override
+	public TushareRespCmd quotationDaily(QuotationDailyCmd cmd) {
 
 		TushareReqCmd<QuotationDailyCmd> req = new TushareReqCmd<QuotationDailyCmd>();
+		req.setApi_name(TushareApiName.QUOTATION_DAILY.geteName());
+		req.setToken(token);
 		req.setParams(cmd);
-		req.setApi_name("daily");
 
-		return req;
+		return tushareApi(req);
 	}
+
 }

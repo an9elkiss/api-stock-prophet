@@ -26,7 +26,7 @@ public class QuotationDailyController {
 
 		// http client 查询Tushare
 
-		log.debug(tushareClientService.tushareApi(cmd));
+		log.debug(JsonUtils.toString(tushareClientService.quotationDaily(cmd)));
 
 		return ApiResponseCmd.success();
     }
