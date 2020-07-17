@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" monitorInterval="1800">    
     <Appenders>
-        <RollingFile name="RollingFile" fileName="/usr/app-server/logs/api-time-dominator.log" 
-        		filePattern="/usr/app-server/logs/api-time-dominator-%d{yyyy-MM-dd}.log">  
+        <RollingFile name="RollingFile" fileName="/usr/app-server/logs/api-stock-prophet.log" 
+        		filePattern="/usr/app-server/logs/api-stock-prophet-%d{yyyy-MM-dd}.log">  
 		    <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss Z} %-5level %t \(%F:%L\) %method\(\) - %m%n"/>  
 		    <Policies>  
 		        <TimeBasedTriggeringPolicy modulate="true" interval="1"/>  
