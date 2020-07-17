@@ -3,7 +3,7 @@ package com.an9elkiss.api.spp.command;
 import lombok.Data;
 
 @Data
-public class StockBasicFetchCmd   {
+public class QutationDailyFetchCmd   {
 
 	private String tsCode;
 	private String tradeDate;
