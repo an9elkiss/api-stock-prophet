@@ -1,5 +1,6 @@
 package com.an9elkiss.api.spp.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,17 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 
 		}
 		return ApiResponseCmd.success();
+	}
+
+	@Override
+	public void fetchToday() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		String today = df.format(System.currentTimeMillis());
+
+		FinaForecastCmd cmd = new FinaForecastCmd();
+		cmd.setAnn_date(today);
+
+		fetch(cmd);
 	}
 
 

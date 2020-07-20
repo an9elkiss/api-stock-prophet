@@ -7,4 +7,6 @@ public interface FinaForecastService {
 
 	ApiResponseCmd<Object> fetch(FinaForecastCmd cmd);
 
+	void fetchToday();
+
 }

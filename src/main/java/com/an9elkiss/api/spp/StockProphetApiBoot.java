@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,9 +18,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
+@EnableScheduling
 @ComponentScan(basePackages = {
-		"com.an9elkiss.api.spp.api, com.an9elkiss.api.spp.service, "
-				+ "com.an9elkiss.commons.util.spring, com.an9elkiss.commons.auth.spring" })
+		"com.an9elkiss.api.spp.api, com.an9elkiss.api.spp.service" })
 @MapperScan("com.an9elkiss.api.spp.dao")
 public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements CommandLineRunner {
 
