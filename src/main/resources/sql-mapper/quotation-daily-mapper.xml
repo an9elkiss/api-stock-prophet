@@ -9,7 +9,7 @@
 		INSERT INTO t_daily
 		(
 			<foreach collection="fields" item="field" index="index" separator="," >  
-                "${field}" 
+                `${field}`
             </foreach>
 		)
 		VALUES

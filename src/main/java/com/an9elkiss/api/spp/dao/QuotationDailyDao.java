@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface QuotationDailyDao {
 
-	int save(@Param("fields") String[] fields, @Param("item") String[] item);
+	int save(@Param("fields") String[] fields, @Param("item") Object[] item);
 
 
 }
