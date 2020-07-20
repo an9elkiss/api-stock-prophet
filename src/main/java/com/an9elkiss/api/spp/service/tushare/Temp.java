@@ -1,21 +1,20 @@
 package com.an9elkiss.api.spp.service.tushare;
 
-import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
-import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
-import com.an9elkiss.commons.util.JsonUtils;
+import java.util.Arrays;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class Temp {
 
 	public static void main(String[] args) {
-		QuotationDailyCmd cmd = new QuotationDailyCmd();
-		cmd.setTs_code("aaa");
-		cmd.setTrade_date("bbb");
-		
-		TushareReqCmd<QuotationDailyCmd> req = new TushareReqCmd<QuotationDailyCmd>();
-		req.setParams(cmd);
-		req.setApi_name("api");
-		
-		System.out.println(JsonUtils.toString(req));
+
+		Object[] item = new Object[3];
+		item[0] = "aaa";
+		item[1] = 111;
+		item[2] = 123;
+
+		log.error("拉取fina forecast数据，存DB时异常！{}", Arrays.toString(item));
 
 	}
 

@@ -5,6 +5,9 @@ public interface Status {
     Integer SUCCESS_CODE = 200;
     String SUCCESS_MESSAGE = "操作成功";
 
+	Integer PARTIAL_SUCCESS_CODE = 210;
+	String PARTIAL_SUCCESS_MESSAGE = "部分成功";
+
     Integer ACCESS_DENY_CODE = 500;
     String ACCESS_DENY_MESSAGE = "拒绝访问";
 

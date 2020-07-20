@@ -14,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.an9elkiss.api.spp.command.tushare.FinaForecastCmd;
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
@@ -70,5 +71,17 @@ public class TushareClientServiceImpl implements TushareClientService {
 
 		return tushareApi(req);
 	}
+
+	@Override
+	public TushareRespCmd finaForecast(FinaForecastCmd cmd) {
+
+		TushareReqCmd<FinaForecastCmd> req = new TushareReqCmd<FinaForecastCmd>();
+		req.setApi_name(TushareApiName.FINA_FORECAST.geteName());
+		req.setToken(token);
+		req.setParams(cmd);
+
+		return tushareApi(req);
+	}
+
 
 }
