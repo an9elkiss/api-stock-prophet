@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TushareRespDataCmd {
 	private String[] fields;
-	private String[][] items;
+	private Object[][] items;
 	private boolean has_more;
 }

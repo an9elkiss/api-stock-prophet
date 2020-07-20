@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.an9elkiss.api.spp.command.QutationDailyFetchCmd;
-import com.an9elkiss.api.spp.service.tushare.TushareClientService;
+import com.an9elkiss.api.spp.service.QuotationDailyService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.util.JsonUtils;
 
@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 public class QuotationDailyController {
 
 	@Autowired
-	private TushareClientService tushareClientService;
+	private QuotationDailyService quotationDailyService;
 
 	@RequestMapping(value = "/quotation-daily/fetch", produces = { "application/json" }, method = RequestMethod.POST)
 	public ApiResponseCmd<?> fetch(@RequestBody QutationDailyFetchCmd cmd) {
@@ -26,7 +26,7 @@ public class QuotationDailyController {
 
 		// http client 查询Tushare
 
-		log.debug(JsonUtils.toString(tushareClientService.quotationDaily(cmd)));
+		log.debug(JsonUtils.toString(quotationDailyService.fetch(cmd)));
 
 		return ApiResponseCmd.success();
     }
