@@ -41,11 +41,7 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 		}
 
 		if (e > 0) {
-			ApiResponseCmd respCmd = new ApiResponseCmd();
-			respCmd.setCode(Status.PARTIAL_SUCCESS_CODE);
-			respCmd.setMessage(Status.PARTIAL_SUCCESS_MESSAGE);
-			return respCmd;
-
+			return new ApiResponseCmd(Status.PARTIAL_SUCCESS);
 		}
 		return ApiResponseCmd.success();
 	}

@@ -22,22 +22,15 @@ public class ApiResponseCmd<T> implements Serializable{
 
 	public static ApiResponseCmd success() {
 		ApiResponseCmd apiResponseCmd = new ApiResponseCmd();
-		apiResponseCmd.setCode(Status.SUCCESS_CODE);
-		apiResponseCmd.setMessage(Status.SUCCESS_MESSAGE);
-		return apiResponseCmd;
-	}
-
-	public static ApiResponseCmd deny() {
-		ApiResponseCmd apiResponseCmd = new ApiResponseCmd();
-		apiResponseCmd.setCode(Status.ACCESS_DENY_CODE);
-		apiResponseCmd.setMessage(Status.ACCESS_DENY_MESSAGE);
+		apiResponseCmd.setCode(Status.SUCCESS.getCode());
+		apiResponseCmd.setMessage(Status.SUCCESS.getMessage());
 		return apiResponseCmd;
 	}
 
 	public static <D> ApiResponseCmd<D> success(D t) {
 		ApiResponseCmd<D> apiResponseCmd = new ApiResponseCmd<D>();
-		apiResponseCmd.setCode(Status.SUCCESS_CODE);
-		apiResponseCmd.setMessage(Status.SUCCESS_MESSAGE);
+		apiResponseCmd.setCode(Status.SUCCESS.getCode());
+		apiResponseCmd.setMessage(Status.SUCCESS.getMessage());
 		apiResponseCmd.setData(t);
 		return apiResponseCmd;
 	}

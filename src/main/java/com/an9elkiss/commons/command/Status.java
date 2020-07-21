@@ -1,18 +1,26 @@
 package com.an9elkiss.commons.command;
 
-public interface Status {
+public enum Status {
 
-    Integer SUCCESS_CODE = 200;
-    String SUCCESS_MESSAGE = "操作成功";
+	SUCCESS(200, "操作成功"),
+	PARTIAL_SUCCESS(210, "部分成功"),
+	NO_TARGET_DATA(241, "无目标数据");
 
-	Integer PARTIAL_SUCCESS_CODE = 210;
-	String PARTIAL_SUCCESS_MESSAGE = "部分成功";
+	private Integer code;
+	private String message;
+	
+	private Status(Integer code, String message) {
+		this.code = code;
+		this.message = message;
+	}
 
-    Integer ACCESS_DENY_CODE = 500;
-    String ACCESS_DENY_MESSAGE = "拒绝访问";
+	public Integer getCode() {
+		return code;
+	}
 
-    Integer getCode();
+	public String getMessage() {
+		return message;
+	}
 
-    String getMessage();
 
 }

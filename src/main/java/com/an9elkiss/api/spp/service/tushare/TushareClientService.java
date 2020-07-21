@@ -10,5 +10,7 @@ public interface TushareClientService {
 
 	TushareRespCmd quotationDaily(QuotationDailyCmd cmd);
 
+	TushareRespCmd quotationDailysNextMonth(String tsCode, String startDate);
+
 	TushareRespCmd finaForecast(FinaForecastCmd cmd);
 }

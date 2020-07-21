@@ -1,14 +1,24 @@
 package com.an9elkiss.api.spp.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
+import com.an9elkiss.api.spp.dao.FinaForecastDao;
 import com.an9elkiss.api.spp.dao.QuotationDailyDao;
 import com.an9elkiss.api.spp.exception.SppBizException;
+import com.an9elkiss.api.spp.model.FinaForecast;
 import com.an9elkiss.api.spp.service.tushare.TushareClientService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
+import com.an9elkiss.commons.command.Constant;
+import com.an9elkiss.commons.command.Status;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -20,7 +30,15 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 	private QuotationDailyDao quotationDailyDao;
 
 	@Autowired
+	private FinaForecastDao finaForecastDao;
+
+	@Autowired
 	private TushareClientService tushareClientService;
+
+	@Value("#{'${spp.stock.my}'.split(',')}")
+	private List<String> mStocks;
+
+	private final static String FIELD_FINA_FORECAST_ID = "fina_forecast_id";
 
 	@Override
 	public ApiResponseCmd<Object> fetch(QuotationDailyCmd cmd) {
@@ -33,6 +51,49 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 		}
 
 		return ApiResponseCmd.success();
+	}
+
+	@Override
+	@Transactional
+	public ApiResponseCmd<Object> nextMonthDailysFromForecastAnnDate() {
+		
+		FinaForecast finaForecast = finaForecastDao.findForQuotationDailysNextMonth(mStocks);
+		if(finaForecast == null) {
+			return new ApiResponseCmd(Status.NO_TARGET_DATA);
+		}
+		log.debug("拉取与fina forecast关联的daily数据 {}", finaForecast);
+		
+		TushareRespCmd tushareRespCmd = tushareClientService.quotationDailysNextMonth(finaForecast.getTs_code(),
+				finaForecast.getAnn_date());
+		
+		int eNum = 0;
+		
+		for (Object[] item : tushareRespCmd.getData().getItems()) {
+			String[] fields = Arrays.copyOf(tushareRespCmd.getData().getFields(),
+					tushareRespCmd.getData().getFields().length + 1);
+			fields[fields.length - 1] = FIELD_FINA_FORECAST_ID;
+
+			Object[] values = Arrays.copyOf(item, item.length + 1);
+			values[values.length - 1] = finaForecast.getId();
+
+			try {
+				quotationDailyDao.save(fields, values);
+			} catch (DuplicateKeyException e) {
+				log.error("拉取与fina forecast关联的daily数据，存DB时唯一键重复！{}", Arrays.toString(values));
+				eNum++;
+			}
+		}
+
+		if (eNum > 0) {
+			finaForecast.setDaily_next_month(Constant.ERROR_INT);
+			finaForecastDao.update(finaForecast);
+			return new ApiResponseCmd(Status.PARTIAL_SUCCESS);
+		} else {
+			finaForecast.setDaily_next_month(Constant.YES_INT);
+			finaForecastDao.update(finaForecast);
+			return ApiResponseCmd.success();
+		}
+
 	}
 
 

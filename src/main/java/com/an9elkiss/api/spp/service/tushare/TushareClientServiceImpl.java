@@ -1,7 +1,10 @@
 package com.an9elkiss.api.spp.service.tushare;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
@@ -70,6 +73,28 @@ public class TushareClientServiceImpl implements TushareClientService {
 		req.setParams(cmd);
 
 		return tushareApi(req);
+	}
+
+	@Override
+	public TushareRespCmd quotationDailysNextMonth(String tsCode, String startDate) {
+		log.debug("开始日期 {}", startDate);
+
+		String endDate = null;
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date start = df.parse(startDate);
+			Date end = DateUtils.addMonths(start, 1);
+			endDate = df.format(end);
+		} catch (java.text.ParseException e) {
+			throw new SppBizException("日期格式化失败！", e);
+		}
+
+		QuotationDailyCmd cmd = new QuotationDailyCmd();
+		cmd.setTs_code(tsCode);
+		cmd.setStart_date(startDate);
+		cmd.setEnd_date(endDate);
+
+		return quotationDaily(cmd);
 	}
 
 	@Override

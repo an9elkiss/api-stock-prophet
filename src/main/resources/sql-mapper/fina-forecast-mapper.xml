@@ -20,4 +20,25 @@
 		);
 	</insert>
 	
+	<update id="update" parameterType="com.an9elkiss.api.spp.model.FinaForecast">
+		UPDATE t_fina_forecast
+		SET ts_code=#{ts_code}
+		<if test="daily_next_month!=null">
+			, daily_next_month = #{daily_next_month}
+		</if>
+		WHERE id=#{id}
+	</update>
+	
+	<select id="findForQuotationDailysNextMonth"  resultType = "com.an9elkiss.api.spp.model.FinaForecast" >
+		SELECT id,ts_code,ann_date
+		FROM t_fina_forecast
+		WHERE ts_code IN (
+			<foreach collection="tsCodes" item="tsCode" index="index" separator="," >  
+                #{tsCode} 
+            </foreach>
+		)
+		AND daily_next_month IS NULL
+		LIMIT 1;
+	</select>
+	
 </mapper>
