@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.an9elkiss.api.spp.command.tushare.FinaForecastCmd;
+import com.an9elkiss.api.spp.command.tushare.FinaIndicatorCmd;
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
@@ -41,6 +42,8 @@ public class TushareClientServiceImpl implements TushareClientService {
 
 	@Value("${spp.tushare.api.url}")
 	private String url;
+
+	private final static String FIELDS_FINA_INDICATOR = "ts_code,ann_date,end_date,op_income,ebit,netprofit_margin,op_yoy,or_yoy";
 
 	@Override
 	public TushareRespCmd tushareApi(TushareReqCmd<?> reqCmd) {
@@ -108,5 +111,15 @@ public class TushareClientServiceImpl implements TushareClientService {
 		return tushareApi(req);
 	}
 
+	@Override
+	public TushareRespCmd finaIndicator(FinaIndicatorCmd cmd) {
 
+		TushareReqCmd<FinaIndicatorCmd> req = new TushareReqCmd<FinaIndicatorCmd>();
+		req.setApi_name(TushareApiName.FINA_INDICATOR.geteName());
+		req.setToken(token);
+		req.setParams(cmd);
+		req.setFields(this.FIELDS_FINA_INDICATOR);
+
+		return tushareApi(req);
+	}
 }

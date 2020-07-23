@@ -41,7 +41,6 @@ public class QuotationDailyServiceTests {
 	@Autowired
 	private QuotationDailyService quotationDailyService;
 
-	// TODO 事务
 	@Test
 	@Transactional
 	@Rollback
@@ -50,5 +49,11 @@ public class QuotationDailyServiceTests {
 		Assert.assertEquals(Status.SUCCESS.getCode(), respCmd.getCode());
 	}
 
-
+	@Test
+//	@Transactional
+//	@Rollback
+	public void testNextMonthDailysFromIndicatorAnnDate() {
+		ApiResponseCmd<?> respCmd = quotationDailyService.nextMonthDailysFromIndicatorAnnDate();
+		Assert.assertEquals(Status.SUCCESS.getCode(), respCmd.getCode());
+	}
 }

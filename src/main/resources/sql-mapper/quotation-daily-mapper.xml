@@ -20,4 +20,14 @@
 		);
 	</insert>
 	
+	<update id="update" parameterType="com.an9elkiss.api.spp.model.QuotationDaily">
+		UPDATE t_daily
+		SET ts_code=#{ts_code}
+		<if test="fina_indicator_id!=null">
+			, fina_indicator_id = #{fina_indicator_id}
+		</if>
+		WHERE ts_code=#{ts_code}
+		AND trade_date=#{trade_date}
+	</update>
+	
 </mapper>

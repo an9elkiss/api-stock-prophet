@@ -8,4 +8,6 @@ public interface QuotationDailyService {
 	ApiResponseCmd<Object> fetch(QuotationDailyCmd cmd);
 
 	ApiResponseCmd<Object> nextMonthDailysFromForecastAnnDate();
+	
+	ApiResponseCmd<Object> nextMonthDailysFromIndicatorAnnDate();
 }

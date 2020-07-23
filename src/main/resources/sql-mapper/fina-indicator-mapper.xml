@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.an9elkiss.api.spp.dao.FinaIndicatorDao">
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_fina_indicator
+		(
+			<foreach collection="fields" item="field" index="index" separator="," >  
+                `${field}`
+            </foreach>
+		)
+		VALUES
+		(
+			<foreach collection="item" item="itemValue" index="index" separator="," >  
+                #{itemValue} 
+            </foreach>
+		);
+	</insert>
+
+	<select id="findForQuotationDailysNextMonth"  resultType = "com.an9elkiss.api.spp.model.FinaIndicator" >
+		SELECT id,ts_code,ann_date
+		FROM t_fina_indicator
+		WHERE ts_code IN (
+			<foreach collection="tsCodes" item="tsCode" index="index" separator="," >  
+                #{tsCode} 
+            </foreach>
+		)
+		AND daily_next_month IS NULL
+		LIMIT 1;
+	</select>
+	
+	<update id="update" parameterType="com.an9elkiss.api.spp.model.FinaIndicator">
+		UPDATE t_fina_indicator
+		SET ts_code=#{ts_code}
+		<if test="daily_next_month!=null">
+			, daily_next_month = #{daily_next_month}
+		</if>
+		WHERE id=#{id}
+	</update>
+	
+</mapper>

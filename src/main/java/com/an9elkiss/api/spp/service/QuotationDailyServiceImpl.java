@@ -12,9 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
 import com.an9elkiss.api.spp.dao.FinaForecastDao;
+import com.an9elkiss.api.spp.dao.FinaIndicatorDao;
 import com.an9elkiss.api.spp.dao.QuotationDailyDao;
 import com.an9elkiss.api.spp.exception.SppBizException;
 import com.an9elkiss.api.spp.model.FinaForecast;
+import com.an9elkiss.api.spp.model.FinaIndicator;
+import com.an9elkiss.api.spp.model.QuotationDaily;
 import com.an9elkiss.api.spp.service.tushare.TushareClientService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.command.Constant;
@@ -33,12 +36,18 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 	private FinaForecastDao finaForecastDao;
 
 	@Autowired
+	private FinaIndicatorDao finaIndicatorDao;
+
+	@Autowired
 	private TushareClientService tushareClientService;
 
 	@Value("#{'${spp.stock.my}'.split(',')}")
 	private List<String> mStocks;
 
+	private final static String FIELD_TS_CODE = "ts_code";
+	private final static String FIELD_TRADE_DATE = "trade_date";
 	private final static String FIELD_FINA_FORECAST_ID = "fina_forecast_id";
+	private final static String FIELD_FINA_INDICATOR_ID = "fina_indicator_id";
 
 	@Override
 	public ApiResponseCmd<Object> fetch(QuotationDailyCmd cmd) {
@@ -93,6 +102,48 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 			finaForecastDao.update(finaForecast);
 			return ApiResponseCmd.success();
 		}
+
+	}
+
+	@Override
+	@Transactional
+	public ApiResponseCmd<Object> nextMonthDailysFromIndicatorAnnDate() {
+
+		FinaIndicator finaIndicator = finaIndicatorDao.findForQuotationDailysNextMonth(mStocks);
+		if (finaIndicator == null) {
+			return new ApiResponseCmd(Status.NO_TARGET_DATA);
+		}
+		log.debug("拉取与fina indicator关联的daily数据 {}", finaIndicator);
+
+		TushareRespCmd tushareRespCmd = tushareClientService.quotationDailysNextMonth(finaIndicator.getTs_code(),
+				finaIndicator.getAnn_date());
+		
+		int iTsCode = Arrays.binarySearch(tushareRespCmd.getData().getFields(), FIELD_TS_CODE); 
+		int iTradeDate = Arrays.binarySearch(tushareRespCmd.getData().getFields(), FIELD_TRADE_DATE);
+
+		for (Object[] item : tushareRespCmd.getData().getItems()) {
+			String[] fields = Arrays.copyOf(tushareRespCmd.getData().getFields(),
+					tushareRespCmd.getData().getFields().length + 1);
+			fields[fields.length - 1] = FIELD_FINA_FORECAST_ID;
+
+			Object[] values = Arrays.copyOf(item, item.length + 1);
+			values[values.length - 1] = finaIndicator.getId();
+
+			try {
+				quotationDailyDao.save(fields, values);
+			} catch (DuplicateKeyException e) {
+				QuotationDaily quotationDaily = new QuotationDaily();
+				quotationDaily.setTs_code((String) values[iTsCode]);
+				quotationDaily.setTrade_date((String) values[iTradeDate]);
+				quotationDaily.setFina_indicator_id(finaIndicator.getId());
+				
+				quotationDailyDao.update(quotationDaily);
+			}
+		}
+
+		finaIndicator.setDaily_next_month(Constant.YES_INT);
+		finaIndicatorDao.update(finaIndicator);
+		return ApiResponseCmd.success();
 
 	}
 
