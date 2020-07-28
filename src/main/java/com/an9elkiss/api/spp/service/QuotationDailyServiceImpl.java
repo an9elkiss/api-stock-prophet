@@ -124,7 +124,7 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 		for (Object[] item : tushareRespCmd.getData().getItems()) {
 			String[] fields = Arrays.copyOf(tushareRespCmd.getData().getFields(),
 					tushareRespCmd.getData().getFields().length + 1);
-			fields[fields.length - 1] = FIELD_FINA_FORECAST_ID;
+			fields[fields.length - 1] = FIELD_FINA_INDICATOR_ID;
 
 			Object[] values = Arrays.copyOf(item, item.length + 1);
 			values[values.length - 1] = finaIndicator.getId();
@@ -133,8 +133,8 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 				quotationDailyDao.save(fields, values);
 			} catch (DuplicateKeyException e) {
 				QuotationDaily quotationDaily = new QuotationDaily();
-				quotationDaily.setTs_code((String) values[iTsCode]);
-				quotationDaily.setTrade_date((String) values[iTradeDate]);
+				quotationDaily.setTs_code((String) item[iTsCode]);
+				quotationDaily.setTrade_date((String) item[iTradeDate]);
 				quotationDaily.setFina_indicator_id(finaIndicator.getId());
 				
 				quotationDailyDao.update(quotationDaily);

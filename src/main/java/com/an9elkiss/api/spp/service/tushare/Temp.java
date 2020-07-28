@@ -1,6 +1,6 @@
 package com.an9elkiss.api.spp.service.tushare;
 
-import com.an9elkiss.api.spp.model.FinaForecast;
+import java.util.Arrays;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -8,11 +8,11 @@ import lombok.extern.log4j.Log4j2;
 public class Temp {
 
 	public static void main(String[] args) {
+		
+		String[] x = new String[] { "a", "b", "c" };
 
-		FinaForecast finaForecast = new FinaForecast();
-		finaForecast.setId(123);
-		finaForecast.setTs_code("aaa");
-		log.debug("拉取与fina forecast关联的daily数据 {}", finaForecast);
+		int iTsCode = Arrays.binarySearch(x, "b");
+		System.out.println(iTsCode);
 
 	}
 
