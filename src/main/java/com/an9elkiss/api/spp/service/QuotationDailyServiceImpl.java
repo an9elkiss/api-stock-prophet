@@ -117,9 +117,12 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 
 		TushareRespCmd tushareRespCmd = tushareClientService.quotationDailysNextMonth(finaIndicator.getTs_code(),
 				finaIndicator.getAnn_date());
+		log.debug("拉取与fina indicator关联的daily数据 {}", tushareRespCmd);
 		
-		int iTsCode = Arrays.binarySearch(tushareRespCmd.getData().getFields(), FIELD_TS_CODE); 
-		int iTradeDate = Arrays.binarySearch(tushareRespCmd.getData().getFields(), FIELD_TRADE_DATE);
+		int iTsCode = indexOf(tushareRespCmd.getData().getFields(), FIELD_TS_CODE);
+		int iTradeDate = indexOf(tushareRespCmd.getData().getFields(), FIELD_TRADE_DATE);
+		log.debug("FIELD_TS_CODE位置 {}", iTsCode);
+		log.debug("FIELD_TRADE_DATE位置 {}", iTradeDate);
 
 		for (Object[] item : tushareRespCmd.getData().getItems()) {
 			String[] fields = Arrays.copyOf(tushareRespCmd.getData().getFields(),
@@ -145,6 +148,15 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 		finaIndicatorDao.update(finaIndicator);
 		return ApiResponseCmd.success();
 
+	}
+
+	private int indexOf(String[] x, String s) {
+		for (int i = 0; i < x.length; i++) {
+			if (x[i].equals(s)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 
