@@ -5,10 +5,10 @@ import com.an9elkiss.commons.command.ApiResponseCmd;
 
 public interface FinaForecastService {
 
-	ApiResponseCmd<Object> fetch(FinaForecastCmd cmd);
+	ApiResponseCmd<Integer> fetch(FinaForecastCmd cmd);
 
 	void fetchToday();
 
-	void fetchMyStocksToday();
+	ApiResponseCmd<Integer> fetchMyStocksToday();
 
 }

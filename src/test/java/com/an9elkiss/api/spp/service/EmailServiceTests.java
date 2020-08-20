@@ -15,37 +15,26 @@
  */
 package com.an9elkiss.api.spp.service;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.an9elkiss.api.spp.StockProphetApiBoot;
-import com.an9elkiss.commons.command.ApiResponseCmd;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { StockProphetApiBoot.class })
 @AutoConfigureMockMvc
-public class FinaForecastServiceTests {
+public class EmailServiceTests {
 
 	@Autowired
-	private MockMvc mockMvc;
-
-	@Autowired
-	private FinaForecastService finaForecastService;
+	private EmailService emailService;
 
 	@Test
-	@Transactional
-	@Rollback
-	public void testfetchMyStocksToday() {
-		ApiResponseCmd<Integer> resp = finaForecastService.fetchMyStocksToday();
-		Assert.assertEquals(Integer.valueOf(1), resp.getData());
+	public void testEmailService() {
+		emailService.send("yuan.zhao@baozun.com", "test", "test001");
 	}
 
 }
