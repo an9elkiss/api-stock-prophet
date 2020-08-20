@@ -2,8 +2,10 @@ package com.an9elkiss.api.spp.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.an9elkiss.api.spp.command.tushare.FinaForecastCmd;
@@ -25,6 +27,9 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 	@Autowired
 	private TushareClientService tushareClientService;
 
+	@Value("#{'${spp.stock.my}'.split(',')}")
+	private List<String> mStocks;
+
 	@Override
 	public ApiResponseCmd<Object> fetch(FinaForecastCmd cmd) {
 
@@ -33,6 +38,10 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 		int e = 0;
 
 		for (Object[] item : tushareRespCmd.getData().getItems()) {
+			if (cmd.getIsMyStock() != null && cmd.getIsMyStock() && !mStocks.contains(item[0])) {
+				continue;
+			}
+
 			int i = finaForecastDao.save(tushareRespCmd.getData().getFields(), item);
 			if (i != 1) {
 				log.error("拉取fina forecast数据，存DB时异常！{}", Arrays.toString(item));
@@ -48,14 +57,24 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 
 	@Override
 	public void fetchToday() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-		String today = df.format(System.currentTimeMillis());
 
 		FinaForecastCmd cmd = new FinaForecastCmd();
-		cmd.setAnn_date(today);
+		cmd.setAnn_date(today());
 
 		fetch(cmd);
 	}
 
+	@Override
+	public void fetchMyStocksToday() {
+		FinaForecastCmd cmd = new FinaForecastCmd();
+		cmd.setAnn_date(today());
+		cmd.setIsMyStock(true);
 
+		fetch(cmd);
+	}
+
+	private String today() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		return df.format(System.currentTimeMillis());
+	}
 }

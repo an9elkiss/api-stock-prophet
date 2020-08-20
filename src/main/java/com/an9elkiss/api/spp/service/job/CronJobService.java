@@ -1,7 +1,6 @@
 package com.an9elkiss.api.spp.service.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.an9elkiss.api.spp.service.FinaForecastService;
@@ -33,7 +32,7 @@ public class CronJobService {
 		log.debug("定时任务fetch-forecast-dailys完成。");
 	}
 
-	@Scheduled(cron = "${spp.job.fetch-indicator-dailys}")
+//	@Scheduled(cron = "${spp.job.fetch-indicator-dailys}")
 	public void fetchQutationDailysByIndicatorAnnDate() {
 		log.debug("定时任务fetch-indicator-dailys开始……");
 		quotationDailyService.nextMonthDailysFromIndicatorAnnDate();

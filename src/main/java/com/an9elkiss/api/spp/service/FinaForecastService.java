@@ -9,4 +9,6 @@ public interface FinaForecastService {
 
 	void fetchToday();
 
+	void fetchMyStocksToday();
+
 }
