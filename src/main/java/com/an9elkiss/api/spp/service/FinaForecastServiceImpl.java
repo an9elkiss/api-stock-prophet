@@ -1,6 +1,7 @@
 package com.an9elkiss.api.spp.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 
 	@Autowired
 	private TushareClientService tushareClientService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Value("#{'${spp.stock.my}'.split(',')}")
 	private List<String> mStocks;
@@ -64,8 +68,41 @@ public class FinaForecastServiceImpl implements FinaForecastService {
 		return fetch(cmd);
 	}
 
+	@Override
+	public void noticeMyStocksToday() {
+		FinaForecastCmd cmd = new FinaForecastCmd();
+		cmd.setAnn_date(today());
+		cmd.setIsMyStock(true);
+
+		TushareRespCmd tushareRespCmd = tushareClientService.finaForecast(cmd);
+
+		filterItems(cmd, tushareRespCmd);
+
+		emailService.noticeFinaForecast(tushareRespCmd.getData());
+	}
+
 	private String today() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		return df.format(System.currentTimeMillis());
+	}
+
+	private void filterItems(FinaForecastCmd cmd, TushareRespCmd tushareRespCmd) {
+
+		List<Object[]> targetItems = new ArrayList<Object[]>();
+		for (Object[] item : tushareRespCmd.getData().getItems()) {
+			if (cmd.getIsMyStock() != null && cmd.getIsMyStock() && !mStocks.contains(item[0])) {
+				continue;
+			}
+
+			targetItems.add(item);
+		}
+
+		if (targetItems.isEmpty()) {
+			tushareRespCmd.getData().setItems(null);
+		} else {
+			Object[][] items = new Object[targetItems.size() + 1][targetItems.get(0).length];
+			tushareRespCmd.getData().setItems(targetItems.toArray(items));
+		}
+
 	}
 }

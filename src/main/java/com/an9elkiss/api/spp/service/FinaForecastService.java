@@ -11,4 +11,6 @@ public interface FinaForecastService {
 
 	ApiResponseCmd<Integer> fetchMyStocksToday();
 
+	void noticeMyStocksToday();
+
 }
