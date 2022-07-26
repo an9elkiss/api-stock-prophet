@@ -22,13 +22,8 @@ public class QuotationDailyController {
 
 	@RequestMapping(value = "/quotation-daily/fetch", produces = { "application/json" }, method = RequestMethod.POST)
 	public ApiResponseCmd<?> fetch(@RequestBody QutationDailyFetchCmd cmd) {
-		log.debug(JsonUtils.toString(cmd));
 
-		// http client 查询Tushare
-
-		log.debug(JsonUtils.toString(quotationDailyService.fetch(cmd)));
-
-		return ApiResponseCmd.success();
+		return quotationDailyService.fetch(cmd);
     }
 
 

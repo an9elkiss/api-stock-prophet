@@ -50,16 +50,13 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 	private final static String FIELD_FINA_INDICATOR_ID = "fina_indicator_id";
 
 	@Override
-	public ApiResponseCmd<Object> fetch(QuotationDailyCmd cmd) {
+	public ApiResponseCmd<Integer> fetch(QuotationDailyCmd cmd) {
 
 		TushareRespCmd tushareRespCmd = tushareClientService.quotationDaily(cmd);
 
-		int i = quotationDailyDao.save(tushareRespCmd.getData().getFields(), tushareRespCmd.getData().getItems()[0]);
-		if (i != 1) {
-			throw new SppBizException("拉取quotation daily数据，存DB时异常！");
-		}
+		Arrays.stream(tushareRespCmd.getData().getItems()).forEach(item-> quotationDailyDao.save(tushareRespCmd.getData().getFields(), item));
 
-		return ApiResponseCmd.success();
+		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
 	}
 
 	@Override

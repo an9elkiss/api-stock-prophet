@@ -6,7 +6,7 @@
 <mapper namespace="com.an9elkiss.api.spp.dao.QuotationDailyDao">
 
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_daily
+		INSERT INTO t_ts_daily
 		(
 			<foreach collection="fields" item="field" index="index" separator="," >  
                 `${field}`
@@ -21,7 +21,7 @@
 	</insert>
 	
 	<update id="update" parameterType="com.an9elkiss.api.spp.model.QuotationDaily">
-		UPDATE t_daily
+		UPDATE t_ts_daily
 		SET ts_code=#{ts_code}
 		<if test="fina_indicator_id!=null">
 			, fina_indicator_id = #{fina_indicator_id}
