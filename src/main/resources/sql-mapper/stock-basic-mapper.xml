@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.an9elkiss.api.spp.dao.StockBasicDao">
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_ts_stock_basic
+		(
+			<foreach collection="fields" item="field" index="index" separator="," >  
+                `${field}`
+            </foreach>
+		)
+		VALUES
+		(
+			<foreach collection="item" item="itemValue" index="index" separator="," >  
+                #{itemValue} 
+            </foreach>
+		);
+	</insert>
+
+</mapper>

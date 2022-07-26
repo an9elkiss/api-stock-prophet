@@ -17,11 +17,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
-@EnableScheduling
-@ComponentScan(basePackages = {
-		"com.an9elkiss.api.spp.api, com.an9elkiss.api.spp.service" })
-@MapperScan("com.an9elkiss.api.spp.dao")
+//@EnableScheduling
+//@MapperScan("com.an9elkiss.api.spp.dao")
 public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements CommandLineRunner {
 
     @Override
@@ -50,32 +47,32 @@ public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements Comm
 	 * 实现封装PUT请求的From体至Command
 	 * @return
 	 */
-    @Bean
-    public FilterRegistrationBean httpPutFormContentFilter() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        HttpPutFormContentFilter httpPutFormContentFilter = new HttpPutFormContentFilter();
-        registration.setFilter(httpPutFormContentFilter);
-        registration.addUrlPatterns("/*");
-        return registration;
-    }
+//    @Bean
+//    public FilterRegistrationBean httpPutFormContentFilter() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        HttpPutFormContentFilter httpPutFormContentFilter = new HttpPutFormContentFilter();
+//        registration.setFilter(httpPutFormContentFilter);
+//        registration.addUrlPatterns("/*");
+//        return registration;
+//    }
     
     /**
 	 * 允许跨域请求。swagger可能发起跨域请求
 	 * 
 	 * @return
 	 */
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedHeaders("*")
-                        .allowedMethods("*")
-                        .allowedOrigins("*");
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurerAdapter() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedHeaders("*")
+//                        .allowedMethods("*")
+//                        .allowedOrigins("*");
+//            }
+//        };
+//    }
 
 
 }

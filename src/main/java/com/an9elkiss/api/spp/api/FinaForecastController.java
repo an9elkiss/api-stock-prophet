@@ -27,5 +27,12 @@ public class FinaForecastController {
 		return finaForecastService.fetch(cmd);
     }
 
+	@RequestMapping(value = "/temp", produces = { "application/json" }, method = RequestMethod.POST)
+	public ApiResponseCmd<?> f() {
+		log.info("xxx");
+
+		return null;
+	}
+
 
 }

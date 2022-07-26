@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.an9elkiss.api.spp.command.tushare.*;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -17,11 +18,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.an9elkiss.api.spp.command.tushare.FinaForecastCmd;
-import com.an9elkiss.api.spp.command.tushare.FinaIndicatorCmd;
-import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
-import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
-import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
 import com.an9elkiss.api.spp.constant.TushareApiName;
 import com.an9elkiss.api.spp.exception.SppBizException;
 import com.an9elkiss.commons.util.JsonUtils;
@@ -52,6 +48,7 @@ public class TushareClientServiceImpl implements TushareClientService {
 		httpPost.setConfig(requestConfig);
 
 		String jsonReq = JsonUtils.toString(reqCmd);
+		log.info("ts-req {}",jsonReq);
 
 		try {
 			httpPost.setEntity(new StringEntity(jsonReq));
@@ -60,11 +57,22 @@ public class TushareClientServiceImpl implements TushareClientService {
 
 			HttpEntity httpEntity = response.getEntity();
 			String json = EntityUtils.toString(httpEntity, "UTF-8");
+			log.info("ts-resp {}",json);
 
 			return JsonUtils.parse(json, TushareRespCmd.class);
 		} catch (ParseException | IOException e) {
 			throw new SppBizException("请求 Tushare异常！", e);
 		}
+	}
+
+	@Override
+	public TushareRespCmd stockBasic(StockBasicCmd cmd) {
+		TushareReqCmd<StockBasicCmd> req = new TushareReqCmd<>();
+		req.setApi_name(TushareApiName.STOCK_BASIC.geteName());
+		req.setToken(token);
+		req.setParams(cmd);
+
+		return tushareApi(req);
 	}
 
 	@Override
