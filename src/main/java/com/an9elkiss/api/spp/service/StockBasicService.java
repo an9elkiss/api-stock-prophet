@@ -5,6 +5,7 @@ import com.an9elkiss.api.spp.command.tushare.StockBasicCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
 import com.an9elkiss.api.spp.dao.FinaForecastDao;
 import com.an9elkiss.api.spp.dao.StockBasicDao;
+import com.an9elkiss.api.spp.model.StockBasic;
 import com.an9elkiss.api.spp.service.tushare.TushareClientService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.util.JsonUtils;
@@ -39,5 +40,8 @@ public class StockBasicService {
 		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
 	}
 
+	public ApiResponseCmd<List<StockBasic>> find(StockBasicCmd cmd) {
 
+		return ApiResponseCmd.success(stockBasicDao.find(cmd));
+	}
 }

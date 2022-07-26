@@ -54,7 +54,13 @@ public class QuotationDailyServiceImpl implements QuotationDailyService {
 
 		TushareRespCmd tushareRespCmd = tushareClientService.quotationDaily(cmd);
 
-		Arrays.stream(tushareRespCmd.getData().getItems()).forEach(item-> quotationDailyDao.save(tushareRespCmd.getData().getFields(), item));
+		Integer batchSize = 100;
+		Integer length = tushareRespCmd.getData().getItems().length;
+		for(int i = 0; i < length; i+=batchSize){
+			log.info("ts-daily-批量插入 {} / {}", i, length);
+			quotationDailyDao.batchSave(tushareRespCmd.getData().getFields(),
+					Arrays.copyOfRange(tushareRespCmd.getData().getItems(), i, i + batchSize > length ? length : i + batchSize));
+		}
 
 		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
 	}

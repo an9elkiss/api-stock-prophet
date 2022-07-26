@@ -3,6 +3,7 @@ package com.an9elkiss.api.spp.api;
 import com.an9elkiss.api.spp.command.tushare.StockBasicCmd;
 import com.an9elkiss.api.spp.service.StockBasicService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
+import com.an9elkiss.commons.util.JsonUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,13 @@ public class StockBasicController {
 
 		return stockBasicService.fetch(cmd);
     }
+
+	@RequestMapping(value = "/stock-basic/daily/import", produces = { "application/json" }, method = RequestMethod.POST)
+	public ApiResponseCmd<?> importDaily(@RequestBody StockBasicCmd cmd) {
+		log.info("---------"+ JsonUtils.toString(stockBasicService.find(cmd)) );
+
+		return ApiResponseCmd.success();
+	}
 
 
 }

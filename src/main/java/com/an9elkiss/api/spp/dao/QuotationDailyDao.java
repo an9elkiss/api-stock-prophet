@@ -10,6 +10,8 @@ public interface QuotationDailyDao {
 
 	int save(@Param("fields") String[] fields, @Param("item") Object[] item);
 
+	int batchSave(@Param("fields") String[] fields, @Param("items") Object[][] item);
+
 	int update(QuotationDaily quotationDaily);
 
 

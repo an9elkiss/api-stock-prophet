@@ -19,6 +19,24 @@
             </foreach>
 		);
 	</insert>
+
+	<insert id="batchSave" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_ts_daily
+		(
+		<foreach collection="fields" item="field" index="index" separator="," >
+			`${field}`
+		</foreach>
+		)
+		VALUES
+		<foreach collection="items" item="item" index="index" separator="," >
+			(
+			<foreach collection="item" item="itemValue" index="index" separator="," >
+				#{itemValue}
+			</foreach>
+			)
+		</foreach>
+		;
+	</insert>
 	
 	<update id="update" parameterType="com.an9elkiss.api.spp.model.QuotationDaily">
 		UPDATE t_ts_daily
