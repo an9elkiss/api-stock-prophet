@@ -1,22 +1,17 @@
 package com.an9elkiss.api.spp.service;
 
-import com.an9elkiss.api.spp.command.tushare.FinaForecastCmd;
-import com.an9elkiss.api.spp.command.tushare.StockBasicCmd;
-import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
-import com.an9elkiss.api.spp.dao.FinaForecastDao;
+import com.an9elkiss.api.spp.command.tushare.*;
+import com.an9elkiss.api.spp.dao.QuotationDailyDao;
 import com.an9elkiss.api.spp.dao.StockBasicDao;
+import com.an9elkiss.api.spp.model.QuotationDaily;
 import com.an9elkiss.api.spp.model.StockBasic;
 import com.an9elkiss.api.spp.service.tushare.TushareClientService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
-import com.an9elkiss.commons.util.JsonUtils;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +23,13 @@ public class StockBasicService {
 	private StockBasicDao stockBasicDao;
 
 	@Resource
+	private QuotationDailyDao quotationDailyDao;
+
+	@Resource
 	private TushareClientService tushareClientService;
+
+	@Resource
+	private QuotationDailyService quotationDailyService;
 
 
 	public ApiResponseCmd<Integer> fetch(StockBasicCmd cmd) {
@@ -40,8 +41,30 @@ public class StockBasicService {
 		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
 	}
 
-	public ApiResponseCmd<List<StockBasic>> find(StockBasicCmd cmd) {
+	public ApiResponseCmd<?> importDaily(DailyImportCmd cmd) {
+		StockBasicCmd stockBasicCmd = new StockBasicCmd();
+		BeanUtils.copyProperties(cmd, stockBasicCmd);
+		stockBasicCmd.setOffSet((cmd.getPage()-1)*cmd.getSize());
+		stockBasicCmd.setLimit(cmd.getSize());
 
-		return ApiResponseCmd.success(stockBasicDao.find(cmd));
+		List<StockBasic> stockBasics = stockBasicDao.findByPage(stockBasicCmd);
+		log.info("ts-stockBasic-分页查询 第{}页，{}/{}条", cmd.getPage(), stockBasics.size(), cmd.getSize());
+
+		stockBasics.forEach(b->{
+			QuotationDaily quotationDaily = new QuotationDaily();
+			quotationDaily.setTs_code(b.getTsCode());
+			if (quotationDailyDao.count(quotationDaily) > 0){
+				log.info("ts-daily-已有数据，跳过 ts_code = {}", b.getTsCode());
+				return;
+			}
+
+			QuotationDailyCmd quotationDailyCmd = new QuotationDailyCmd();
+			BeanUtils.copyProperties(cmd, quotationDailyCmd);
+			quotationDailyCmd.setTs_code(b.getTsCode());
+
+			quotationDailyService.fetch(quotationDailyCmd);
+		});
+
+		return ApiResponseCmd.success();
 	}
 }

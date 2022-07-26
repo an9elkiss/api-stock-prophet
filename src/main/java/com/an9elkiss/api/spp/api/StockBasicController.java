@@ -1,5 +1,6 @@
 package com.an9elkiss.api.spp.api;
 
+import com.an9elkiss.api.spp.command.tushare.DailyImportCmd;
 import com.an9elkiss.api.spp.command.tushare.StockBasicCmd;
 import com.an9elkiss.api.spp.service.StockBasicService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
@@ -26,10 +27,9 @@ public class StockBasicController {
     }
 
 	@RequestMapping(value = "/stock-basic/daily/import", produces = { "application/json" }, method = RequestMethod.POST)
-	public ApiResponseCmd<?> importDaily(@RequestBody StockBasicCmd cmd) {
-		log.info("---------"+ JsonUtils.toString(stockBasicService.find(cmd)) );
+	public ApiResponseCmd<?> importDaily(@RequestBody DailyImportCmd cmd) {
 
-		return ApiResponseCmd.success();
+		return stockBasicService.importDaily(cmd);
 	}
 
 

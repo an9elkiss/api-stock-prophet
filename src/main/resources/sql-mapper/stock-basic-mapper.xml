@@ -25,13 +25,15 @@
 		);
 	</insert>
 
-	<select id="find" parameterType="StockBasicCmd" resultMap = "stockBasic">
+	<select id="findByPage" parameterType="StockBasicCmd" resultMap = "stockBasic">
 		SELECT *
 		FROM t_ts_stock_basic
 		WHERE 1 = 1
 		<if test="market!=null and market!=''">
 			and market = #{market}
 		</if>
+		order by ts_code
+		limit #{offSet}, #{limit}
 	</select>
 
 </mapper>

@@ -13,6 +13,6 @@ public interface StockBasicDao {
 
 	int save(@Param("fields") String[] fields, @Param("item") Object[] item);
 
-	List<StockBasic> find(StockBasicCmd stockBasicCmd);
+	List<StockBasic> findByPage(StockBasicCmd stockBasicCmd);
 
 }

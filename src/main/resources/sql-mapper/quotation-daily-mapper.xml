@@ -47,5 +47,14 @@
 		WHERE ts_code=#{ts_code}
 		AND trade_date=#{trade_date}
 	</update>
+
+	<select id="count" parameterType="QuotationDaily" resultType="Integer">
+		SELECT count(*)
+		FROM t_ts_daily
+		WHERE 1 = 1
+		<if test="ts_code!=null and ts_code!=''">
+			and ts_code = #{ts_code}
+		</if>
+	</select>
 	
 </mapper>
