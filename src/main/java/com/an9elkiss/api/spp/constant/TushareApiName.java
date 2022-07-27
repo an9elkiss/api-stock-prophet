@@ -5,7 +5,8 @@ public enum TushareApiName {
 	STOCK_BASIC("stock_basic", "获取基础信息数据，包括股票代码、名称、上市日期、退市日期等"),
 	QUOTATION_DAILY("daily", "每日行情"),
 	FINA_FORECAST("forecast","业绩预告"),
-	FINA_INDICATOR("fina_indicator","财务指标");
+	FINA_INDICATOR("fina_indicator","财务指标"),
+	STK_HOLDERNUMBER("stk_holdernumber", "股东人数");
 
 	private String eName;
 	private String chName;

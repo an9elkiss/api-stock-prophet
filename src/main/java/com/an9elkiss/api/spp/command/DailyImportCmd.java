@@ -1,4 +1,4 @@
-package com.an9elkiss.api.spp.command.tushare;
+package com.an9elkiss.api.spp.command;
 
 import lombok.Data;
 

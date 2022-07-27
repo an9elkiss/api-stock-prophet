@@ -1,20 +1,10 @@
 package com.an9elkiss.api.spp.service;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.an9elkiss.api.spp.command.tushare.QuotationDailyCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareRespCmd;
 import com.an9elkiss.api.spp.dao.FinaForecastDao;
 import com.an9elkiss.api.spp.dao.FinaIndicatorDao;
 import com.an9elkiss.api.spp.dao.QuotationDailyDao;
-import com.an9elkiss.api.spp.exception.SppBizException;
 import com.an9elkiss.api.spp.model.FinaForecast;
 import com.an9elkiss.api.spp.model.FinaIndicator;
 import com.an9elkiss.api.spp.model.QuotationDaily;
@@ -22,8 +12,15 @@ import com.an9elkiss.api.spp.service.tushare.TushareClientService;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.command.Constant;
 import com.an9elkiss.commons.command.Status;
-
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Log4j2
 @Service
