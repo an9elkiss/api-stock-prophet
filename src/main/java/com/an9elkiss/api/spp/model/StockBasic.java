@@ -6,6 +6,7 @@ import lombok.Data;
 public class StockBasic {
 	private String tsCode;
 	private String market;
+	private String industry;
 
 }
 //  `ts_code` varchar(20) DEFAULT NULL,

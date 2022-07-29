@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.an9elkiss.api.spp.dao.ads.DailySortAdsDao">
+
+	<insert id="batchSave">
+		INSERT INTO t_ads_daily_sort
+		    (ts_code,industry,date,time_num,time_unit,pct_chg,market,sort)
+		VALUES
+		<foreach collection="dailySortAdsList" separator="," item="item">
+			(#{item.ts_code},#{item.industry},#{item.date},#{item.time_num},#{item.time_unit},#{item.pct_chg},#{item.market},#{item.sort})
+		</foreach>
+	</insert>
+
+</mapper>

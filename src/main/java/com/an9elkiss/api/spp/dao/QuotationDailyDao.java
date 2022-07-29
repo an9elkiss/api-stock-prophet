@@ -1,13 +1,10 @@
 package com.an9elkiss.api.spp.dao;
 
-import com.an9elkiss.api.spp.command.TimeEntryCmd;
-import com.an9elkiss.api.spp.command.tushare.StockBasicCmd;
-import com.an9elkiss.api.spp.model.Daily;
-import com.an9elkiss.api.spp.model.StockBasic;
+import com.an9elkiss.api.spp.command.ads.DailySortAdsCmd;
+import com.an9elkiss.api.spp.model.DailySortAds;
+import com.an9elkiss.api.spp.model.QuotationDaily;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import com.an9elkiss.api.spp.model.QuotationDaily;
 
 import java.util.List;
 
@@ -22,5 +19,5 @@ public interface QuotationDailyDao {
 
 	Integer count(QuotationDaily quotationDaily);
 
-
+	List<DailySortAds> sortByPctChg(DailySortAdsCmd dailySortAdsCmd);
 }

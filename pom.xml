@@ -141,6 +141,12 @@
 			<artifactId>lombok</artifactId>
 			<version>1.16.16</version>
 		</dependency>
+
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-http</artifactId>
+			<version>5.7.19</version>
+		</dependency>
 	    
 	    <!-- log -->
 	    <dependency>

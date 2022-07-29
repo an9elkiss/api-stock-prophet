@@ -5,6 +5,12 @@
 
 <mapper namespace="com.an9elkiss.api.spp.dao.QuotationDailyDao">
 
+	<resultMap id = "dailySortAds" type = "DailySortAds">
+		<result property = "ts_code" column = "ts_code"/>
+		<result property = "pct_chg" column = "pct_chg"/>
+		<result property = "sort" column = "sort"/>
+	</resultMap>
+
 	<insert id="save" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO t_ts_daily
 		(
@@ -55,6 +61,16 @@
 		<if test="ts_code!=null and ts_code!=''">
 			and ts_code = #{ts_code}
 		</if>
+	</select>
+
+	<select id="sortByPctChg" parameterType="DailySortAdsCmd" resultMap = "dailySortAds">
+		SELECT d.ts_code,sum(d.pct_chg) as pct_chg
+		FROM t_ts_daily d, t_ts_stock_basic b
+		WHERE d.trade_date >= #{date} AND d.trade_date <![CDATA[<]]> #{to}
+		AND d.ts_code = b.ts_code
+		AND b.market = #{market}
+		GROUP BY d.ts_code
+		ORDER BY sum(d.pct_chg) DESC;
 	</select>
 	
 </mapper>
