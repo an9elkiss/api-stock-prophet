@@ -3,7 +3,9 @@ package com.an9elkiss.api.spp.service.tushare;
 import com.an9elkiss.api.spp.command.StkHolderNumberFetchCmd;
 import com.an9elkiss.api.spp.command.tushare.*;
 import com.an9elkiss.api.spp.constant.TushareApiName;
+import com.an9elkiss.api.spp.dao.TuShareDao;
 import com.an9elkiss.api.spp.exception.SppBizException;
+import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.util.JsonUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
@@ -19,8 +21,10 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 @Log4j2
@@ -37,6 +41,9 @@ public class TushareClientService {
 
 	@Value("${spp.tushare.api.url}")
 	private String url;
+
+	@Resource
+	private TuShareDao tuShareDao;
 
 	private final static String FIELDS_FINA_INDICATOR = "ts_code,ann_date,end_date,op_income,ebit,netprofit_margin,op_yoy,or_yoy";
 
@@ -61,6 +68,21 @@ public class TushareClientService {
 		} catch (ParseException | IOException e) {
 			throw new SppBizException("请求 Tushare异常！", e);
 		}
+	}
+
+	public ApiResponseCmd<Integer> fetch(TushareReqCmd<?> reqCmd) {
+
+		TushareRespCmd tushareRespCmd = tushareApi(reqCmd);
+
+		Integer batchSize = 100;
+		Integer length = tushareRespCmd.getData().getItems().length;
+		for(int i = 0; i < length; i+=batchSize){
+			log.info("ts-{}-批量插入 {} / {}", reqCmd.getApi_name(), i, length);
+			tuShareDao.batchSave("t_ts_"+reqCmd.getApi_name(),tushareRespCmd.getData().getFields(),
+					Arrays.copyOfRange(tushareRespCmd.getData().getItems(), i, i + batchSize > length ? length : i + batchSize));
+		}
+
+		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
 	}
 
 	public TushareRespCmd stockBasic(StockBasicCmd cmd) {
