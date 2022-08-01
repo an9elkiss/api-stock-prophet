@@ -3,8 +3,10 @@ package com.an9elkiss.api.spp.service.tushare;
 import com.an9elkiss.api.spp.command.StkHolderNumberFetchCmd;
 import com.an9elkiss.api.spp.command.tushare.*;
 import com.an9elkiss.api.spp.constant.TushareApiName;
+import com.an9elkiss.api.spp.dao.StockBasicDao;
 import com.an9elkiss.api.spp.dao.TuShareDao;
 import com.an9elkiss.api.spp.exception.SppBizException;
+import com.an9elkiss.api.spp.model.StockBasic;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.util.JsonUtils;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +20,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -44,6 +48,9 @@ public class TushareClientService {
 
 	@Resource
 	private TuShareDao tuShareDao;
+
+	@Resource
+	private StockBasicDao stockBasicDao;
 
 	private final static String FIELDS_FINA_INDICATOR = "ts_code,ann_date,end_date,op_income,ebit,netprofit_margin,op_yoy,or_yoy";
 
@@ -83,6 +90,28 @@ public class TushareClientService {
 		}
 
 		return ApiResponseCmd.success(tushareRespCmd.getData().getItems().length);
+	}
+
+	public ApiResponseCmd<?> importData(TushareImportCmd<TushareParamsCmd> cmd) {
+		StockBasicCmd stockBasicCmd = new StockBasicCmd();
+		BeanUtils.copyProperties(cmd, stockBasicCmd);
+		stockBasicCmd.setOffSet((cmd.getPage()-1)*cmd.getSize());
+		stockBasicCmd.setLimit(cmd.getSize());
+
+		List<StockBasic> stockBasics = stockBasicDao.findByPage(stockBasicCmd);
+		log.info("ts-stockBasic-分页查询 第{}页，{}/{}条", cmd.getPage(), stockBasics.size(), cmd.getSize());
+
+		stockBasics.forEach(b->{
+			if (tuShareDao.count("t_ts_"+cmd.getApi_name(), b.getTsCode()) > 0){
+				log.info("ts-{}-已有数据，跳过 ts_code = {}", cmd.getApi_name(), b.getTsCode());
+				return;
+			}
+
+			cmd.getParams().setTs_code(b.getTsCode());
+			fetch(cmd);
+		});
+
+		return ApiResponseCmd.success();
 	}
 
 	public TushareRespCmd stockBasic(StockBasicCmd cmd) {

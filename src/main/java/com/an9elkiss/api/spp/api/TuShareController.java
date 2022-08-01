@@ -1,5 +1,6 @@
 package com.an9elkiss.api.spp.api;
 
+import com.an9elkiss.api.spp.command.tushare.TushareImportCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareParamsCmd;
 import com.an9elkiss.api.spp.command.tushare.TushareReqCmd;
 import com.an9elkiss.api.spp.service.tushare.TushareClientService;
@@ -24,5 +25,11 @@ public class TuShareController {
 
 		return tushareClientService.fetch(reqCmd);
     }
+
+	@RequestMapping(value = "/tushare/import", produces = { "application/json" }, method = RequestMethod.POST)
+	public ApiResponseCmd<?> importData(@RequestBody TushareImportCmd<TushareParamsCmd> cmd) {
+
+		return tushareClientService.importData(cmd);
+	}
 
 }

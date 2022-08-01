@@ -8,4 +8,6 @@ public interface TuShareDao {
 
 	int batchSave(@Param("table") String table, @Param("fields") String[] fields, @Param("items") Object[][] item);
 
+	Integer count(@Param("table") String table, @Param("ts_code") String ts_code);
+
 }
