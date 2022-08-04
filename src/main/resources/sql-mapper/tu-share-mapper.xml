@@ -30,6 +30,9 @@
 		<if test="ts_code!=null and ts_code!=''">
 			and ts_code = #{ts_code}
 		</if>
+		<if test="start_date!=null and start_date!=''">
+			and trade_date >= #{start_date}
+		</if>
 	</select>
 
 </mapper>

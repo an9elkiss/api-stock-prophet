@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service
@@ -102,13 +103,22 @@ public class TushareClientService {
 		log.info("ts-stockBasic-分页查询 第{}页，{}/{}条", cmd.getPage(), stockBasics.size(), cmd.getSize());
 
 		stockBasics.forEach(b->{
-			if (tuShareDao.count("t_ts_"+cmd.getApi_name(), b.getTsCode()) > 0){
+			if (tuShareDao.count("t_ts_"+cmd.getApi_name(), b.getTsCode(), cmd.getParams().getStart_date()) > 0){
 				log.info("ts-{}-已有数据，跳过 ts_code = {}", cmd.getApi_name(), b.getTsCode());
 				return;
 			}
 
 			cmd.getParams().setTs_code(b.getTsCode());
 			fetch(cmd);
+
+			if(cmd.getSleep() != null) {
+				try {
+					log.info("线程sleep {} 秒..", cmd.getSleep()/1000.0);
+					TimeUnit.MILLISECONDS.sleep(cmd.getSleep());
+				} catch (InterruptedException e) {
+					log.warn("线程sleep异常..",e);
+				}
+			}
 		});
 
 		return ApiResponseCmd.success();

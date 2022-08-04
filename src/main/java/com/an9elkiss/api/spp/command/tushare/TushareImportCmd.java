@@ -8,5 +8,6 @@ public class TushareImportCmd<T> extends TushareReqCmd<T> {
 	private String market;
 	private Integer page;
 	private Integer size;
+	private Integer sleep;
 
 }
