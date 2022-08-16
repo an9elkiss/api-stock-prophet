@@ -31,7 +31,7 @@
 			and ts_code = #{ts_code}
 		</if>
 		<if test="start_date!=null and start_date!=''">
-			and trade_date >= #{start_date}
+			and ${date_field} >= #{start_date}
 		</if>
 	</select>
 

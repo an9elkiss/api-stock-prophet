@@ -10,6 +10,7 @@ import com.an9elkiss.api.spp.model.StockBasic;
 import com.an9elkiss.commons.command.ApiResponseCmd;
 import com.an9elkiss.commons.util.JsonUtils;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -103,7 +104,8 @@ public class TushareClientService {
 		log.info("ts-stockBasic-分页查询 第{}页，{}/{}条", cmd.getPage(), stockBasics.size(), cmd.getSize());
 
 		stockBasics.forEach(b->{
-			if (tuShareDao.count("t_ts_"+cmd.getApi_name(), b.getTsCode(), cmd.getParams().getStart_date()) > 0){
+			if (tuShareDao.count("t_ts_"+cmd.getApi_name(), b.getTsCode(),
+					cmd.getParams().getStart_date(), StringUtils.isBlank(cmd.getDate_field()) ? "trade_date" : cmd.getDate_field() ) > 0){
 				log.info("ts-{}-已有数据，跳过 ts_code = {}", cmd.getApi_name(), b.getTsCode());
 				return;
 			}

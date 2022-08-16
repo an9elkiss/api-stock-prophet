@@ -9,5 +9,6 @@ public class TushareImportCmd<T> extends TushareReqCmd<T> {
 	private Integer page;
 	private Integer size;
 	private Integer sleep;
+	private  String date_field;
 
 }
