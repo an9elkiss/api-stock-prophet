@@ -1,25 +1,21 @@
 package com.an9elkiss.api.spp;
 
-import org.mybatis.spring.annotation.MapperScan;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.filter.HttpPutFormContentFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+@Slf4j
 @SpringBootApplication
 //@EnableScheduling
 //@MapperScan("com.an9elkiss.api.spp.dao")
-public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements CommandLineRunner {
+public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements CommandLineRunner, BeanFactoryPostProcessor {
 
     @Override
     public void run(String... arg0) throws Exception {
@@ -30,6 +26,11 @@ public class StockProphetApiBoot extends WebMvcConfigurerAdapter implements Comm
 
     public static void main(String[] args) throws Exception {
         new SpringApplication(StockProphetApiBoot.class).run(args);
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        log.info(StringUtils.arrayToDelimitedString(beanFactory.getBeanDefinitionNames(),","));
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
